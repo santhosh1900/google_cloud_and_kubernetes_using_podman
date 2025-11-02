@@ -1,0 +1,42 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ${GOOGLE_PROJECT_NAME}-deployment
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: ${GOOGLE_PROJECT_NAME}
+  template:
+    metadata:
+      labels:
+        app: ${GOOGLE_PROJECT_NAME}
+    spec:
+      containers:
+      - name: ${GOOGLE_PROJECT_NAME}
+        image: ${GOOGLE_REGION}-docker.pkg.dev/${GOOGLE_PROJECT_ID}/${GOOGLE_PROJECT_NAME}-repo/${GOOGLE_PROJECT_NAME}-service:latest
+        ports:
+        - containerPort: 3000
+        resources:
+          requests:
+            cpu: "500m"
+            memory: "512Mi"
+          limits:
+            cpu: "1000m"
+            memory: "1Gi"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ${GOOGLE_PROJECT_NAME}-service
+  annotations:
+    networking.gke.io/load-balancer-ip-addresses: ${GOOGLE_PROJECT_NAME}-${GOOGLE_PROJECT_NAME}-ip
+spec:
+  type: LoadBalancer
+  loadBalancerIP: ${GOOGLE_STATIC_IP}
+  selector:
+    app: ${GOOGLE_PROJECT_NAME}
+  ports:
+  - protocol: TCP
+    port: 81
+    targetPort: 3000
