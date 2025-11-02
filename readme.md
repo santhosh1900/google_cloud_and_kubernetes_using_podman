@@ -304,3 +304,24 @@ jobs:
           kubectl rollout status deployment/$DEPLOYMENT_NAME -n $NAMESPACE
 
 ```
+
+
+# Domain NAME Mapping
+Once the Static IP address is added to the pod using the setup mentioned in k8s/PROJECT_NAME.yaml
+
+Add that ip address to the domain configuration 
+
+
+| Type | Name   | Value         | TTL  |
+|:-----|:-------|:--------------|:-----|
+| A    | api    | IP-ADDRESS    | 3600 |
+
+```
+kubectl apply -f k8s/managed-cert.yaml
+kubectl apply -f k8s/ingress.yaml
+
+curl https://${DOMAIN_NAME}
+
+```
+
+
