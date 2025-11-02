@@ -1,0 +1,7 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: ${CERFIFICATE_NAME_MENTIONED_IN_INGRESS.YAML}
+spec:
+  domains:
+    - ${DOMAIN_NAME}
